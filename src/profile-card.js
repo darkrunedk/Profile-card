@@ -100,14 +100,17 @@ class ProfileCard extends HTMLElement {
         return false;
     }
     loadFontAwesome() {
-        setTimeout(() => {
-            const fontAwesomeStyle = document.querySelector("#fa-main");
-            if (fontAwesomeStyle != null) {
-                this.shadowRoot.appendChild(fontAwesomeStyle.cloneNode(true));
-            } else {
-                console.warn("Font awesome couldn't be loaded...");
+        const checkElement = async selector => {
+            while (document.querySelector(selector) === null) {
+                await new Promise(resolve => requestAnimationFrame(resolve));
             }
-        }, 80);
+            return document.querySelector(selector);
+        };
+
+        checkElement("#fa-main").then((selector) => {
+            this.shadowRoot.appendChild(selector.cloneNode(true));
+            console.log(selector);
+        });
     }
     GetStyling(height = 400, width = 300, direction = "vertical") {
         let styling =   "a { color: var(--link-color); text-decoration: none; }" +
